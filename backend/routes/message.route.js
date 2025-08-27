@@ -1,28 +1,16 @@
-import { Schema, model, Types } from "../config/db.config";
+import express from "express";
+import {
+  getMessages,
+  getUsersForSidebar,
+  sendMessage,
+} from "../controllers/message.controller.js";
+import { isLogin } from "../middlewares/auth.middleware.js";
 
-const messageSchema = new Schema(
-  {
-    senderId: {
-      type: Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    receiverId: {
-      type: Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    text: {
-      type: String,
-      trim: true,
-    },
-    image: {
-      type: String,
-    },
-  },
-  { timestamps: true }
-);
+const router = express.Router();
+router.use(isLogin);
+router.get("/users", getUsersForSidebar);
+router.get("/:id", getMessages);
 
-const Message = mongoose.model("Message", messageSchema);
+router.post("/send/:id", sendMessage);
 
-export default Message;
+export default router;
