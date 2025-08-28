@@ -79,8 +79,7 @@ export const logout = asyncHandler(async (_, res) => {
     sameSite: "strict",
   });
 
-  res.status(200)
-    .json({ success: true, message: "successfully loggedout" });
+  res.status(200).json({ success: true, message: "successfully loggedout" });
 });
 
 export const updateProfile = asyncHandler(async (req, res) => {
@@ -102,5 +101,5 @@ export const updateProfile = asyncHandler(async (req, res) => {
 });
 
 export const checkAuth = asyncHandler(async (req, res) => {
-  res.status(200).json(req.user);
+  res.status(200).json({ success: true, data: req.user });
 });

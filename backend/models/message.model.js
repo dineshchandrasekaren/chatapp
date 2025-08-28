@@ -1,4 +1,4 @@
-import { Schema, model } from "../config/db.config";
+import { Schema, model } from "../config/db.config.js";
 
 const messageSchema = new Schema(
   {

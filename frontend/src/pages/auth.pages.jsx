@@ -2,10 +2,18 @@ import { useState } from "react";
 import Logo from "../components/logo.component";
 import { Mail, User, Lock, EyeOff, Eye } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useAuth } from "../store/store";
+
 const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [credential, setCredential] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
 
+  const { login, signup, authLoading } = useAuth();
   const { pathname } = useLocation();
 
   const isLogin = pathname === "/login";
@@ -13,9 +21,32 @@ const AuthPage = () => {
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredential((preV) => ({ ...preV, [name]: value }));
+  };
+  const onReset = () => {
+    setCredential({
+      fullName: "",
+      email: "",
+      password: "",
+    });
+  };
   const handleSubmit = () => {
-    // toast.success("fdfaf");
+    const { email, fullName, password } = credential;
+    if (!fullName.trim() && !isLogin)
+      return toast.error("Full name is required");
+    if (!email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(email)) return toast.error("Invalid email format");
+    if (!password) return toast.error("Password is required");
+    if (password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    if (!isLogin) {
+      signup(credential, onReset);
+    } else {
+      login({ email, password }, onReset);
+    }
   };
   return (
     <>
@@ -43,6 +74,9 @@ const AuthPage = () => {
                     type="text"
                     className="text-base-content  font-bold pl-1"
                     placeholder="John Doe"
+                    name="fullName"
+                    value={credential.fullName}
+                    onChange={handleChange}
                   />
                 </label>
               </div>
@@ -55,6 +89,9 @@ const AuthPage = () => {
                   type="email"
                   className="text-base-content  font-bold pl-1"
                   placeholder="you@example.com"
+                  name="email"
+                  onChange={handleChange}
+                  value={credential.email}
                 />
               </label>
             </div>
@@ -66,7 +103,10 @@ const AuthPage = () => {
                   type={showPassword ? "text" : "password"}
                   className="text-base-content  font-bold pl-1"
                   placeholder=". . . . . . . ."
+                  onChange={handleChange}
+                  name="password"
                   style={{ lineHeight: "1.2", letterSpacing: "3px" }}
+                  value={credential.password}
                 />
                 {showPassword ? (
                   <EyeOff
@@ -82,10 +122,16 @@ const AuthPage = () => {
               </label>
             </div>
             <button
-              className="btn btn-primary mt-2 w-full"
+              className={`btn btn-primary mt-2 w-full ${
+                authLoading ? "animate-pulse" : ""
+              }`}
               onClick={handleSubmit}
             >
-              {!isLogin ? "Create Account" : "Sign in"}
+              {authLoading
+                ? "Loading..."
+                : !isLogin
+                ? "Create Account"
+                : "Sign in"}
             </button>
           </fieldset>
           <p className="font-medium mt-6 opacity-70">
@@ -106,7 +152,7 @@ const AuthPage = () => {
                 key={i}
                 className={`${
                   i % 2 == 0 ? "animate-pulse" : ""
-                }  rounded-md h-32 w-32 bg-primary/10`}
+                }  rounded-md h-26 w-26 bg-primary/20`}
               ></div>
             ))}
           </div>
