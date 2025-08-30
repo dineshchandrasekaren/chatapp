@@ -4,7 +4,10 @@ import config from "../config/index.js";
 import jwt from "jsonwebtoken";
 
 export const isLogin = asyncHandler(async (req, res, next) => {
-  const token = req.cookies.token;
+  const { token = "" } = req.cookies;
+  if (!token) {
+    return res.status(404).json({ message: "Unauthorized - Invalid Token" });
+  }
 
   const decoded = jwt.verify(token, config.AUTH_SECRET);
 
@@ -12,10 +15,10 @@ export const isLogin = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized - Invalid Token" });
   }
 
-  const user = await userModel.findById(decoded.userId).select("-password");
+  const user = await userModel.findById(decoded._id);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ success: false, message: "User not found" });
   }
 
   req.user = user;

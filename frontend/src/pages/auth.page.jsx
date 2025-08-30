@@ -3,7 +3,7 @@ import Logo from "../components/logo.component";
 import { Mail, User, Lock, EyeOff, Eye } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../store/store";
+import { useAuthStore } from "../store/useAuthStore";
 
 const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,18 +13,19 @@ const AuthPage = () => {
     password: "",
   });
 
-  const { login, signup, authLoading } = useAuth();
+  const { login, signup, authLoading } = useAuthStore();
   const { pathname } = useLocation();
-
   const isLogin = pathname === "/login";
 
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredential((preV) => ({ ...preV, [name]: value }));
   };
+
   const onReset = () => {
     setCredential({
       fullName: "",
@@ -32,7 +33,7 @@ const AuthPage = () => {
       password: "",
     });
   };
-  const handleSubmit = () => {
+  const validation = () => {
     const { email, fullName, password } = credential;
     if (!fullName.trim() && !isLogin)
       return toast.error("Full name is required");
@@ -42,15 +43,22 @@ const AuthPage = () => {
     if (password.length < 6)
       return toast.error("Password must be at least 6 characters");
 
-    if (!isLogin) {
-      signup(credential, onReset);
-    } else {
-      login({ email, password }, onReset);
+    return true;
+  };
+  const handleSubmit = async () => {
+    if (validation() === true) {
+      if (!isLogin) {
+        // signup
+        await signup(credential, onReset);
+      } else {
+        // login
+        await login(credential, onReset);
+      }
     }
   };
   return (
     <>
-      <div className="grid lg:grid-cols-2 ">
+      <div className="grid lg:grid-cols-2 h-full">
         <div className="w-96 m-auto  py-20 flex flex-col gap-4 items-center justify-center group">
           <Logo size={30} />
           <h2 className="text-2xl font-extrabold mt-4">
@@ -65,7 +73,7 @@ const AuthPage = () => {
           <fieldset className="fieldset w-full gap-4 ">
             {!isLogin && (
               <div>
-                <legend className="fieldset-legend mb-0.5 ml-1">
+                <legend className="fieldset-legend mb-[1px] ml-1">
                   Full Name
                 </legend>
                 <label className="w-full input input-md ">
@@ -82,8 +90,8 @@ const AuthPage = () => {
               </div>
             )}
             <div>
-              <legend className="fieldset-legend mb-0.5 ml-1">Email</legend>
-              <label className="w-full input input-md">
+              <legend className="fieldset-legend mb-[1px] ml-1">Email</legend>
+              <label className="w-full input input-md bg-transparent">
                 <Mail className="text-primary/60" />
                 <input
                   type="email"
@@ -96,8 +104,10 @@ const AuthPage = () => {
               </label>
             </div>
             <div>
-              <legend className="fieldset-legend mb-0.5 ml-1">Password</legend>
-              <label className="w-full input input-md">
+              <legend className="fieldset-legend mb-[1px] ml-1">
+                Password
+              </legend>
+              <label className="w-full input input-md ">
                 <Lock className="text-primary/60" />
                 <input
                   type={showPassword ? "text" : "password"}
@@ -138,7 +148,7 @@ const AuthPage = () => {
             {!isLogin ? "Already have an account?" : "Don't have an account?"}{" "}
             <Link
               to={!isLogin ? "/login" : "/signup"}
-              className="font-bold text-primary opacity-100 underline"
+              className="font-bold text-primary  underline"
             >
               {!isLogin ? "Sign In" : "Create Account"}
             </Link>

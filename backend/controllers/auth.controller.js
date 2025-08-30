@@ -91,15 +91,19 @@ export const updateProfile = asyncHandler(async (req, res) => {
   }
 
   const uploadResponse = await cloudinary.uploader.upload(profilePic);
-  const updatedUser = await User.findByIdAndUpdate(
+  console.log(uploadResponse);
+
+  const updatedUser = await userModel.findByIdAndUpdate(
     userId,
     { profilePic: uploadResponse.secure_url },
     { new: true }
   );
 
-  res.status(200).json(updatedUser);
+  res.status(200).json({ success: true, data: updatedUser.toObject() });
 });
 
 export const checkAuth = asyncHandler(async (req, res) => {
+  console.log({ auth: req.user });
+
   res.status(200).json({ success: true, data: req.user });
 });
