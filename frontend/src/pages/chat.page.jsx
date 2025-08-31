@@ -1,30 +1,21 @@
-import { Users } from "lucide-react";
+import BuddyHeader from "../components/buddy/buddy-header.component";
+import BuddyList from "../components/buddy/buddy-list.component";
+import ChatContainer from "../components/chat/chat-container.component";
+import NoMessage from "../components/chat/no-message.component";
+import useChat from "../store/useChat";
 
 const ChatPage = () => {
+  const { selectedBuddy } = useChat();
   return (
-    <div className="h-full  bg-base-100 p-6 -z-10">
-      <div className="max-w-6xl m-auto rounded-lg overflow-hidden bg-base-100/80 h-[85dvh] border flex shadow-success-content/80  border-base-300 w-full shadow-md  backdrop-blur-lg h-36 ">
-        <div className="flex-1 shadow-sm shadow-success-content/60 border-r  border-base-200">
-          <div className="border-b  border-base-200 p-6 ">
-            <h2 className=" text-base-content text-lg font-extrabold mb-4 flex gap-2">
-              <Users />
-              Contacts
-            </h2>
-            <label htmlFor="online" className="flex gap-2">
-              <input
-                type="checkbox"
-                id="online"
-                className="checkbox checkbox-sm"
-              />
-              <p className="text-sm ">Show online only</p>{" "}
-              <span className="text-sm text-secondary-content/80">
-                {" "}
-                (0 online)
-              </span>
-            </label>
-          </div>
+    <div className="h-dvh  bg-base-100  md:p-6 ">
+      <div className="max-w-6xl m-auto rounded-lg overflow-hidden bg-base-100/80 h-dvh md:h-[90dvh] border flex  border-base-300/50 w-full  ">
+        <div className="w-20 md:w-72  border-r  border-base-300/50 flex flex-col  ">
+          <BuddyHeader />
+          <BuddyList />
         </div>
-        <div className="flex-3"></div>
+        <div className="flex-3 ">
+          {selectedBuddy ? <ChatContainer /> : <NoMessage />}
+        </div>
       </div>
     </div>
   );

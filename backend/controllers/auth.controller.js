@@ -78,7 +78,7 @@ export const logout = asyncHandler(async (_, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
-
+  await SessionModel.findOneAndDelete({ user: req.user._id });
   res.status(200).json({ success: true, message: "successfully loggedout" });
 });
 

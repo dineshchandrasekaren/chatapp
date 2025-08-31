@@ -1,24 +1,25 @@
 import { Route, Routes } from "react-router-dom";
 
+import AuthCheck from "./components/auth-check.component";
+
 import AuthPage from "./pages/auth.page";
 import ProfilePage from "./pages/profile.page";
 import ChatPage from "./pages/chat.page";
+import SettingsPage from "./pages/settings.page";
 
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
-import AuthCheck from "./components/auth-check.component";
 import { useThemeStore } from "./store/useThemeStore";
-import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   const { authCheckLoading: loading, authCheck, user } = useAuthStore();
   const { theme } = useThemeStore();
   useEffect(() => {
     authCheck();
-  }, [authCheck]);
+  }, []);
 
-  if (loading) {
+  if (loading && !user) {
     return (
       <div data-theme={theme} className="relative">
         <div className="absolute bg-base-100 w-dvw h-dvh backdrop-blur-xs z-20 flex justify-center items-center overflow-hidden">
@@ -31,17 +32,22 @@ function App() {
     <div data-theme={theme}>
       <Routes>
         <Route path="/settings" element={<SettingsPage />} />
-        <Route element={<AuthCheck condition={user !== null} navigate="/" />}>
-          <Route path="/signup" element={<AuthPage />} />
-          <Route path="/login" element={<AuthPage />} />
-        </Route>
+
+        {/* Protected routes */}
         <Route
           element={<AuthCheck condition={user === null} navigate="/login" />}
         >
           <Route path="/" element={<ChatPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
+
+        {/* Public routes */}
+        <Route element={<AuthCheck condition={user !== null} navigate="/" />}>
+          <Route path="/signup" element={<AuthPage />} />
+          <Route path="/login" element={<AuthPage />} />
+        </Route>
       </Routes>
+
       <Toaster
         toastOptions={{
           duration: 2000,

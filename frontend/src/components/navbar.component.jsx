@@ -8,8 +8,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <div
-      className="navbar  border-b border-base-300/80 w-full z-40 
-    backdrop-blur-lg bg-base-100/80"
+      className="navbar   border-b border-base-300/40 w-full z-40  
+   bg-base-100/60"
     >
       <div className="navbar-start">
         <Link to="/">
@@ -37,7 +37,7 @@ const Navbar = () => {
                     className="btn whitespace-nowrap backface-hidden btn-link rounded-field no-underline text-base-content hover:no-underline"
                   >
                     <div className="avatar  m-auto mr-2 ">
-                      <div className="ring-base-content/80 relative ring-offset-base-100 w-8 rounded-full ring-2 ring-offset-0">
+                      <div className="ring-base-content/80 relative ring-offset-base-100 w-8 rounded-full ring-2  ring-offset-0">
                         <img src={user?.profilePic || "./avatar.png"} />
                       </div>
                     </div>
@@ -45,7 +45,7 @@ const Navbar = () => {
                   </div>
                   <ul
                     tabIndex={0}
-                    className="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
+                    className="menu  backdrop-blur-lg  dropdown-content bg-base-200/80 rounded-box z-40 mt-4 w-52 p-2 shadow-sm"
                   >
                     <li
                       onClick={() => {

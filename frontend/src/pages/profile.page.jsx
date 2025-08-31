@@ -30,8 +30,8 @@ const ProfilePage = () => {
   };
   const handleSubmit = () => {};
   return (
-    <>
-      <div className="card w-[90%]  md:max-w-xl gap-2.5  bg-base-300 card-lg shadow-sm text-base-content/80 m-auto text-center mt-16 mb-8 p-8">
+    <div className=" bg-base-100 p-8">
+      <div className="card w-[90%]  md:max-w-xl gap-2.5  bg-base-300 card-lg shadow-sm text-base-content/80 m-auto text-center  mb-8 p-8">
         <h2 className="text-2xl font-extrabold mt-1">Profile</h2>
         <p className="font-medium mb-4 ">Your Profile information</p>
 
@@ -101,7 +101,8 @@ const ProfilePage = () => {
             </label>
           </div>
           <button
-            className={`btn btn-primary mt-2 w-full ${
+            disabled
+            className={`btn btn-primary mt-2 w-full  ${
               profileLoading ? "animate-pulse" : ""
             }`}
             onClick={handleSubmit}
@@ -110,7 +111,7 @@ const ProfilePage = () => {
           </button>
         </fieldset>
       </div>
-      <div className="card w-[90%]  md:max-w-xl gap-2.5  bg-base-300 card-lg shadow-sm text-base-content/80 m-auto mb-16 ">
+      <div className="card w-[90%]  md:max-w-xl gap-2.5  bg-base-300 card-lg shadow-sm text-base-content/80 mx-auto ">
         <div className="card-body">
           <h2 className="card-title mb-2">Account Information</h2>
           <div className="overflow-x-auto">
@@ -145,7 +146,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

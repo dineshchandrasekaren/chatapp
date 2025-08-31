@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
 import config from "../config/index.js";
+import SessionModel from "../models/session.model.js";
 
-export function cookieToken(user, res) {
+export async function cookieToken(user, res) {
   // create jwt token or auth token
   const token = jwt.sign({ _id: user._id }, config.AUTH_SECRET, {
     expiresIn: config.AUTH_EXPIRY,
   });
-
+  let session = new SessionModel({ user: user._id, token });
+  await session.save();
   res
     .status(200)
     .cookie("token", token, {

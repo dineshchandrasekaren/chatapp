@@ -2,13 +2,15 @@ import { create } from "zustand";
 import { http } from "../lib/axios";
 import toast from "react-hot-toast";
 import { devtools } from "zustand/middleware";
+import { io } from "socket.io-client";
 
-const store = function (set) {
+const store = function (set, get) {
   return {
     user: null,
     authLoading: false,
     authCheckLoading: false,
     profileLoading: false,
+    socket: null,
     authCheck: async () => {
       set({ authCheckLoading: true });
       try {
@@ -16,6 +18,7 @@ const store = function (set) {
         console.log(response);
 
         set({ user: response.data.data, authCheckLoading: false });
+        get().connectSocket();
       } catch (error) {
         console.log(error);
         set({ user: null, authCheckLoading: false });
@@ -29,6 +32,7 @@ const store = function (set) {
         console.log(response);
 
         set({ user: response.data.data, authLoading: false });
+        get().connectSocket();
         if (next) next();
       } catch (error) {
         toast.error(error.response.data.message);
@@ -40,6 +44,7 @@ const store = function (set) {
       try {
         const response = await http.post("/auth/signup", credential);
         set({ user: response.data.data });
+        get().connectSocket();
         if (next) next();
       } catch (error) {
         toast.error(error.response.data.message);
@@ -69,6 +74,22 @@ const store = function (set) {
         toast.error(error.response.data.message);
       } finally {
         set({ profileLoading: false });
+      }
+    },
+    connectSocket: async () => {
+      const { user } = get();
+      if (!user || get().socket?.connected) return;
+
+      const socket = io("http://localhost:5000", {
+        query: { userId: user?._id },
+      });
+      socket.connect();
+      set({ socket });
+    },
+    disconnectSocket: async () => {
+      const socket = get().socket;
+      if (socket?.connected) {
+        socket.disconnect();
       }
     },
   };

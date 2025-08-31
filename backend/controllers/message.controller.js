@@ -10,7 +10,7 @@ export const getUsersForSidebar = asyncHandler(async (req, res) => {
     _id: { $ne: loggedInUserId },
   });
 
-  res.status(200).json(filteredUsers);
+  res.status(200).json({ success: true, data: filteredUsers });
 });
 
 export const getMessages = asyncHandler(async (req, res) => {
@@ -24,7 +24,7 @@ export const getMessages = asyncHandler(async (req, res) => {
     ],
   });
 
-  res.status(200).json(messages);
+  res.status(200).json({ success: true, data: messages });
 });
 
 export const sendMessage = asyncHandler(async (req, res) => {

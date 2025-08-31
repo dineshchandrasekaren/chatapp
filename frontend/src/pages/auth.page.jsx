@@ -58,104 +58,105 @@ const AuthPage = () => {
   };
   return (
     <>
-      <div className="grid lg:grid-cols-2 h-full">
-        <div className="w-96 m-auto  py-20 flex flex-col gap-4 items-center justify-center group">
-          <Logo size={30} />
-          <h2 className="text-2xl font-extrabold mt-4">
-            {!isLogin ? "Create Account" : "Welcome Back"}
-          </h2>
-          <p className="font-medium mb-4 text-base-content/60">
-            {!isLogin
-              ? "Get started with your free account"
-              : "Sign in to your account"}
-          </p>
-
-          <fieldset className="fieldset w-full gap-4 ">
-            {!isLogin && (
+      <div className="grid lg:grid-cols-2 h-dvh w-full ">
+        <div className="bg-base-100">
+          <div className="w-96 m-auto  bg-base-100 py-20 flex flex-col   gap-4 items-center justify-center px-6 md:px-1">
+            <Logo size={30} />
+            <h2 className="text-2xl font-extrabold mt-4">
+              {!isLogin ? "Create Account" : "Welcome Back"}
+            </h2>
+            <p className="font-medium mb-4 text-base-content/60">
+              {!isLogin
+                ? "Get started with your free account"
+                : "Sign in to your account"}
+            </p>
+            <fieldset className="fieldset w-full gap-4 ">
+              {!isLogin && (
+                <div>
+                  <legend className="fieldset-legend mb-[1px] ml-1">
+                    Full Name
+                  </legend>
+                  <label className="w-full input input-md ">
+                    <User className="text-primary/60" />
+                    <input
+                      type="text"
+                      className="text-base-content  font-bold pl-1"
+                      placeholder="John Doe"
+                      name="fullName"
+                      value={credential.fullName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                </div>
+              )}
               <div>
-                <legend className="fieldset-legend mb-[1px] ml-1">
-                  Full Name
-                </legend>
-                <label className="w-full input input-md ">
-                  <User className="text-primary/60" />
+                <legend className="fieldset-legend mb-[1px] ml-1">Email</legend>
+                <label className="w-full input input-md bg-transparent">
+                  <Mail className="text-primary/60" />
                   <input
-                    type="text"
+                    type="email"
                     className="text-base-content  font-bold pl-1"
-                    placeholder="John Doe"
-                    name="fullName"
-                    value={credential.fullName}
+                    placeholder="you@example.com"
+                    name="email"
                     onChange={handleChange}
+                    value={credential.email}
                   />
                 </label>
               </div>
-            )}
-            <div>
-              <legend className="fieldset-legend mb-[1px] ml-1">Email</legend>
-              <label className="w-full input input-md bg-transparent">
-                <Mail className="text-primary/60" />
-                <input
-                  type="email"
-                  className="text-base-content  font-bold pl-1"
-                  placeholder="you@example.com"
-                  name="email"
-                  onChange={handleChange}
-                  value={credential.email}
-                />
-              </label>
-            </div>
-            <div>
-              <legend className="fieldset-legend mb-[1px] ml-1">
-                Password
-              </legend>
-              <label className="w-full input input-md ">
-                <Lock className="text-primary/60" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="text-base-content  font-bold pl-1"
-                  placeholder=". . . . . . . ."
-                  onChange={handleChange}
-                  name="password"
-                  style={{ lineHeight: "1.2", letterSpacing: "3px" }}
-                  value={credential.password}
-                />
-                {showPassword ? (
-                  <EyeOff
-                    onClick={handleShowPassword}
-                    className="cursor-pointer"
+              <div>
+                <legend className="fieldset-legend mb-[1px] ml-1">
+                  Password
+                </legend>
+                <label className="w-full input input-md ">
+                  <Lock className="text-primary/60" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="text-base-content  font-bold pl-1"
+                    placeholder=". . . . . . . ."
+                    onChange={handleChange}
+                    name="password"
+                    style={{ lineHeight: "1.2", letterSpacing: "3px" }}
+                    value={credential.password}
                   />
-                ) : (
-                  <Eye
-                    onClick={handleShowPassword}
-                    className="cursor-pointer"
-                  />
-                )}
-              </label>
-            </div>
-            <button
-              className={`btn btn-primary mt-2 w-full ${
-                authLoading ? "animate-pulse" : ""
-              }`}
-              onClick={handleSubmit}
-            >
-              {authLoading
-                ? "Loading..."
-                : !isLogin
-                ? "Create Account"
-                : "Sign in"}
-            </button>
-          </fieldset>
-          <p className="font-medium mt-6 opacity-70">
-            {!isLogin ? "Already have an account?" : "Don't have an account?"}{" "}
-            <Link
-              to={!isLogin ? "/login" : "/signup"}
-              className="font-bold text-primary  underline"
-            >
-              {!isLogin ? "Sign In" : "Create Account"}
-            </Link>
-          </p>
+                  {showPassword ? (
+                    <EyeOff
+                      onClick={handleShowPassword}
+                      className="cursor-pointer"
+                    />
+                  ) : (
+                    <Eye
+                      onClick={handleShowPassword}
+                      className="cursor-pointer"
+                    />
+                  )}
+                </label>
+              </div>
+              <button
+                className={`btn btn-primary mt-2 w-full ${
+                  authLoading ? "animate-pulse" : ""
+                }`}
+                onClick={handleSubmit}
+              >
+                {authLoading
+                  ? "Loading..."
+                  : !isLogin
+                  ? "Create Account"
+                  : "Sign in"}
+              </button>
+            </fieldset>
+            <p className="font-medium mt-6 opacity-70">
+              {!isLogin ? "Already have an account?" : "Don't have an account?"}{" "}
+              <Link
+                to={!isLogin ? "/login" : "/signup"}
+                className="font-bold text-primary  underline"
+              >
+                {!isLogin ? "Sign In" : "Create Account"}
+              </Link>
+            </p>
+          </div>
         </div>
 
-        <div className="bg-base-200 text-center  py-20 flex flex-col justify-center items-center gap-4">
+        <div className="bg-base-200 text-center  py-20 flex  flex-col justify-center items-center gap-4">
           <div className="grid grid-cols-3 gap-2 w-max ">
             {[...Array(9)].map((_, i) => (
               <div
