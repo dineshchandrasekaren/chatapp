@@ -3,7 +3,7 @@ import { http } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api";
+  import.meta.env.MODE === "development" ? "http://localhost:5000/" : "/";
 
 const store = function (set, get) {
   return {
@@ -15,6 +15,7 @@ const store = function (set, get) {
     onlineBuddies: [],
     authCheck: () => {
       set({ authCheckLoading: true });
+
       http
         .get("/auth/authCheck")
         .then((response) => {

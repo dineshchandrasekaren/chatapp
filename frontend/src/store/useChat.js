@@ -55,7 +55,7 @@ const useChat = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
     if (!socket) return;
 
-    socket.on("sendMessage", (newMessage) => {
+    socket.on("newMessage", (newMessage) => {
       const isMessageSentFromSelectedBuddy =
         newMessage.senderId === selectedBuddy._id;
 
