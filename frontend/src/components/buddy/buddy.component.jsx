@@ -1,13 +1,11 @@
 import { X } from "lucide-react";
+import { useAuthStore } from "../../store/useAuthStore";
 
-const Buddy = ({
-  user,
-  status = "Offline",
-  containerClass = "",
-  onClose,
-  onBuddyClick = "",
-}) => {
+const Buddy = ({ user, containerClass = "", onClose, onBuddyClick = "" }) => {
   // "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+  const { onlineBuddies } = useAuthStore();
+  console.log(onlineBuddies, user);
+
   return (
     <>
       <button
@@ -21,7 +19,13 @@ const Buddy = ({
         } ${containerClass}`}
       >
         <div>
-          <div className="avatar avatar-online before:top-[unset] before:bottom-0 before:animate-pulse before:right-0">
+          <div
+            className={`avatar ${
+              onlineBuddies.includes(user._id)
+                ? "avatar-online before:top-[unset] before:-bottom-0.5 before:bg-green-500 before:p-1.5 before:-right-0.5"
+                : ""
+            }`}
+          >
             <div className="w-12 rounded-full ring-primary ring-offset-base-100 ring-2 ring-offset-2">
               <img src={user?.profilePic || "/avatar.png"} />
             </div>
@@ -31,7 +35,9 @@ const Buddy = ({
           <h3 className="text-base-content text-md font-extrabold mb-1">
             {user?.fullName || "No name"}
           </h3>
-          <p className="text-zinc-400 text-sm text-left">{status}</p>
+          <p className="text-zinc-400 text-sm text-left">
+            {onlineBuddies.includes(user._id) ? "Online" : "Offline"}
+          </p>
         </div>
         {onClose && (
           // <button>

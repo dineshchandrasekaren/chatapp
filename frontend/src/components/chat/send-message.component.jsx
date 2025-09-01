@@ -26,18 +26,21 @@ const SendMessage = () => {
 
     reader.readAsDataURL(file);
 
-    reader.onload = async () => {
+    reader.onload = () => {
       const base64Image = reader.result;
       setPreviewImage(base64Image);
     };
+
+    e.target.value = "";
   };
+
   const deleteImage = () => {
     setPreviewImage(null);
   };
   return (
     <div className="flex gap-4 relative items-center p-4 border-t border-base-300/50 backdrop-blur-lg">
       {previewImage && (
-        <div className="absolute w-40 h-40 -top-44 left-8   transition transform hover:translate-y-[-5px] duration-300">
+        <div className="absolute w-40 h-40 -top-48 left-8   transition transform hover:translate-y-[-5px] duration-300">
           <div className="relative group">
             {/* Close Icon */}
             <svg
@@ -57,7 +60,7 @@ const SendMessage = () => {
 
             {/* Profile Image */}
             <img
-              className="w-full h-full opacity-50 rounded-md  group-hover:opacity-100"
+              className="w-full h-full opacity-60 rounded-md  group-hover:opacity-100"
               src={previewImage}
               alt="profile"
             />

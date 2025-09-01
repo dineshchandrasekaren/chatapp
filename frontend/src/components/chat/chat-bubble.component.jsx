@@ -1,7 +1,7 @@
 import { useAuthStore } from "../../store/useAuthStore";
 import useChat from "../../store/useChat";
 
-const ChatBubble = ({ sender = false, messages }) => {
+const ChatBubble = ({ sender = false, messages, containerRef }) => {
   const { user } = useAuthStore();
   const { selectedBuddy } = useChat();
   const time = new Date(messages.updatedAt).toLocaleTimeString("en-US", {
@@ -12,7 +12,10 @@ const ChatBubble = ({ sender = false, messages }) => {
     hour12: true,
   });
   return (
-    <div className={`chat  ${sender ? "chat-end" : "chat-start"}`}>
+    <div
+      className={`chat  ${sender ? "chat-end" : "chat-start"}`}
+      ref={containerRef}
+    >
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
           <img

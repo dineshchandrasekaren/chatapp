@@ -3,6 +3,7 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { cookieToken } from "../utils/cookieToken.util.js";
 import cloudinary from "../config/cloudinary.config.js";
+import SessionModel from "../models/session.model.js";
 export const signup = asyncHandler(async (req, res) => {
   const { body = {} } = req;
   let { fullName = "", email = "", password = "" } = body;
@@ -72,7 +73,7 @@ export const login = asyncHandler(async (req, res) => {
   cookieToken(User.toObject(), res);
 });
 
-export const logout = asyncHandler(async (_, res) => {
+export const logout = asyncHandler(async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

@@ -11,18 +11,20 @@ const store = function (set, get) {
     authCheckLoading: false,
     profileLoading: false,
     socket: null,
-    authCheck: async () => {
+    onlineBuddies: [],
+    authCheck: () => {
       set({ authCheckLoading: true });
-      try {
-        const response = await http.get("/auth/authCheck");
-        console.log(response);
-
-        set({ user: response.data.data, authCheckLoading: false });
-        get().connectSocket();
-      } catch (error) {
-        console.log(error);
-        set({ user: null, authCheckLoading: false });
-      }
+      http
+        .get("/auth/authCheck")
+        .then((response) => {
+          console.log(response);
+          set({ user: response.data.data, authCheckLoading: false });
+          get().connectSocket();
+        })
+        .catch((error) => {
+          console.log(error);
+          set({ user: null, authCheckLoading: false });
+        });
     },
 
     login: async ({ email, password }, next) => {
@@ -69,9 +71,16 @@ const store = function (set, get) {
         set({ user: response.data.data });
         toast.success("Profile updated successfully.");
       } catch (error) {
-        console.log(error);
+        const message = error.response.data.message;
 
         toast.error(error.response.data.message);
+        // Unauthorized - Invalid Token
+        if (
+          message === "jwt expired" ||
+          message === "Unauthorized - Invalid Token"
+        ) {
+          window.location.reload();
+        }
       } finally {
         set({ profileLoading: false });
       }
@@ -84,6 +93,9 @@ const store = function (set, get) {
         query: { userId: user?._id },
       });
       socket.connect();
+      socket.on("OnlineUsers", (onlineBuddies) => {
+        set({ onlineBuddies });
+      });
       set({ socket });
     },
     disconnectSocket: async () => {

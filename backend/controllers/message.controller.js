@@ -3,6 +3,8 @@ import Message from "../models/message.model.js";
 
 import cloudinary from "../config/cloudinary.config.js";
 import { asyncHandler } from "../middlewares/async-handler.middleware.js";
+import { getReceiverId } from "../server.js";
+import { io } from "../utils/seed.js";
 
 export const getUsersForSidebar = asyncHandler(async (req, res) => {
   const loggedInUserId = req.user._id;
@@ -47,6 +49,11 @@ export const sendMessage = asyncHandler(async (req, res) => {
   });
 
   await newMessage.save();
+
+  const receiverSocketId = getReceiverId(receiverId);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("sendMessage", newMessage);
+  }
 
   res.status(201).json(newMessage);
 });

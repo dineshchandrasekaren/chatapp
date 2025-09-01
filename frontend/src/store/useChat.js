@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { http } from "../lib/axios";
 import toast from "react-hot-toast";
+import { useAuthStore } from "./useAuthStore";
 
 const useChat = create((set, get) => ({
   messages: [],
@@ -17,8 +18,14 @@ const useChat = create((set, get) => ({
       const response = await http.get(`/messages/${receiverId}`);
       set({ messages: response.data.data });
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      const message = error.response.data.message;
+      toast.error(message);
+      if (
+        message === "jwt expired" ||
+        message === "Unauthorized - Invalid Token"
+      ) {
+        window.location.reload();
+      }
     } finally {
       set({ messageLoading: false });
     }
@@ -30,11 +37,36 @@ const useChat = create((set, get) => ({
       set({ buddies: response.data.data });
     } catch (error) {
       set({ selectedBuddy: null });
-      console.log(error);
-      toast.error(error.response.data.message);
+      const message = error.response.data.message;
+      toast.error(message);
+      if (
+        message === "jwt expired" ||
+        message === "Unauthorized - Invalid Token"
+      ) {
+        window.location.reload();
+      }
     } finally {
       set({ buddyLoading: false });
     }
+  },
+  subscribeToMessage: async () => {
+    const { selectedBuddy } = get();
+    if (!selectedBuddy) return;
+    const socket = useAuthStore.getState().socket;
+    if (!socket) return;
+
+    socket.on("sendMessage", (newMessage) => {
+      const isMessageSentFromSelectedBuddy =
+        newMessage.senderId === selectedBuddy._id;
+
+      if (!isMessageSentFromSelectedBuddy) return;
+
+      set({ messages: [...get().messages, newMessage] });
+    });
+  },
+  unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
   },
   sendMessage: async (data) => {
     const { selectedBuddy, messages } = get();
@@ -43,12 +75,17 @@ const useChat = create((set, get) => ({
         `/messages/send/${selectedBuddy._id}`,
         data
       );
-      console.log(response);
 
       set({ messages: [...messages, response.data] });
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      const message = error.response.data.message;
+      toast.error(message);
+      if (
+        message === "jwt expired" ||
+        message === "Unauthorized - Invalid Token"
+      ) {
+        window.location.reload();
+      }
     }
   },
 }));
