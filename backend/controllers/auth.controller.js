@@ -92,7 +92,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
   }
 
   const uploadResponse = await cloudinary.uploader.upload(profilePic);
-  console.log(uploadResponse);
 
   const updatedUser = await userModel.findByIdAndUpdate(
     userId,

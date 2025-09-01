@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { http } from "../lib/axios";
 import toast from "react-hot-toast";
-import { devtools } from "zustand/middleware";
 import { io } from "socket.io-client";
+const BASE_URL =
+  import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api";
 
 const store = function (set, get) {
   return {
@@ -89,7 +90,7 @@ const store = function (set, get) {
       const { user } = get();
       if (!user || get().socket?.connected) return;
 
-      const socket = io("http://localhost:5000", {
+      const socket = io(BASE_URL, {
         query: { userId: user?._id },
       });
       socket.connect();
@@ -107,4 +108,4 @@ const store = function (set, get) {
   };
 };
 
-export const useAuthStore = create(devtools(store, { name: "AuthStore" }));
+export const useAuthStore = create(store);

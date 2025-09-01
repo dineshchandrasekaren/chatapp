@@ -3,8 +3,7 @@ import Message from "../models/message.model.js";
 
 import cloudinary from "../config/cloudinary.config.js";
 import { asyncHandler } from "../middlewares/async-handler.middleware.js";
-import { getReceiverId } from "../server.js";
-import { io } from "../utils/seed.js";
+import { getReceiverId, io } from "../utils/seed.js";
 
 export const getUsersForSidebar = asyncHandler(async (req, res) => {
   const loggedInUserId = req.user._id;
