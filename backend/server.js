@@ -4,6 +4,7 @@ import express from "express";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import cors from "cors";
+import path from "path";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { app, server } from "./utils/seed.js";
