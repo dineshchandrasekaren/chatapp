@@ -61,6 +61,7 @@ const store = function (set, get) {
         await http.post("/auth/logout");
         set({ user: null });
         toast.success("Logout successfully.");
+        get().disconnectSocket();
       } catch (error) {
         toast.error(error.response.data.message);
       }

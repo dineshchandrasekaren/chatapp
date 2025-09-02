@@ -73,6 +73,14 @@ const SendMessage = () => {
         className="textarea flex-1 resize-none overflow-y-auto max-h-20"
         onChange={handleChange}
         value={text}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (previewImage || text) {
+              handleClick();
+            }
+          }
+        }}
       />
 
       <label
@@ -97,14 +105,14 @@ const SendMessage = () => {
           hidden
           accept="image/*"
           onChange={handleImage}
-          disabled={!!previewImage} // disable when image exists
+          disabled={!!previewImage}
         />
       </label>
 
       <button
         className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         onClick={handleClick}
-        disabled={!previewImage && !text} // disabled only if both are empty
+        disabled={!previewImage && !text}
       >
         <Send />
       </button>
