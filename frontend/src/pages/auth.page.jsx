@@ -163,7 +163,7 @@ const AuthPage = () => {
                 key={i}
                 className={`${
                   i % 2 == 0 ? "animate-pulse" : ""
-                }  rounded-md h-26 w-26 bg-primary/20`}
+                }  rounded-md h-26 w-26 bg-primary/30`}
               ></div>
             ))}
           </div>

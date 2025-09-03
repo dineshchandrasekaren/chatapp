@@ -24,6 +24,8 @@ const ProfilePage = () => {
       setUploadedImage(base64Image);
       await updateProfile(base64Image);
     };
+
+    e.target.value = "";
   };
   const handleChange = (e) => {
     setChanges((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -50,9 +52,9 @@ const ProfilePage = () => {
               id="file-upload"
               type="file"
               hidden
-              accept="images/*"
+              accept="image/*"
               onChange={handleFileChange}
-              disabled={profileLoading}
+              disabled={!!profileLoading}
             />
           </label>
         </div>
